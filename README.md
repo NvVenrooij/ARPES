@@ -1,4 +1,4 @@
-# ARPES Simulation
+# Tight binding ARPES for semiconductors
 
 A Python package for simulating angle-resolved photoemission spectroscopy (ARPES) intensity patterns from semiconductor bulk crystals and delta-layer heterostructures. The simulation combines an empirical sp3s\* tight-binding band structure (with optional spin–orbit coupling and second-nearest-neighbour hopping) with analytic photoemission matrix elements built from hydrogenic atomic orbital Fourier transforms.
 
