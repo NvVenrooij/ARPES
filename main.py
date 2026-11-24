@@ -1,5 +1,6 @@
 #%%
-
+import torch
+import numpy as np
 from materials import Material
 from run_helpers import *
 
@@ -7,32 +8,36 @@ def main():
     material = Material("Si")
     mps = material.material_parameters_AU
 
+    kmin_x = -4 
+    kmax_x = 4  
     kmin_y = -3
     kmax_y = 3
-    kmin_z = 9
-    kmax_z = 14.5
+    kmin_z = 9 
+    kmax_z = 17
 
-    k_ranges = (kmin_y, kmax_y, kmin_z - 1, kmax_z + 3, 0)
-    plane_density = 200
+    k_ranges = (kmin_x, kmax_x, kmin_z, kmax_z, 0)
+    plane_density = 500
 
     polarization = "kz_ky"
-    delta_layer = False
+    delta_layer = True
     grid = True
     spin_orbit = True
 
     energy = 1.2
     bandwidth = 0.01
-    v_max = 0.1
+    v_max = 1
 
     run_path_calc = False
     run_xx_xz = True
     run_k_xz = True
 
+    path = '/Users/nielsvanvenrooij/Library/CloudStorage/Dropbox/Mac/Documents/phD/Projects/ARPES/Code/Figures'
+
     if delta_layer:
         kappa = 20
         potential_well_depth = 0.3
         potential_well_width = 3
-        kz_shift = -0.74
+        kz_shift = 0.74
         delta_potential = 0.0
 
     else:
@@ -57,6 +62,7 @@ def main():
         delta_potential=delta_potential,
         potential_well_depth=potential_well_depth,
         potential_well_width=potential_well_width,
+        save_path= path,
     )
 
     plane_base_params["kappa"] = kappa
@@ -76,13 +82,14 @@ def main():
         delta_potential=delta_potential,
         potential_well_depth=potential_well_depth,
         potential_well_width=potential_well_width,
+        save_path= path,
     )
 
     if run_path_calc:
-        run_path(material, path_params)
+        sim_path, tb_path, arpes_path = run_path(material, path_params)
 
     if run_xx_xz:
-        run_plane(
+        sim_xxz, tb_xxz, arpes_xxz = run_plane(
             material,
             plane_base_params,
             mps["high_symmetry_points"]["Xx"],
@@ -91,7 +98,7 @@ def main():
         )
 
     if run_k_xz:
-        run_plane(
+        sim_kxz, tb_kxz, arpes_kxz = run_plane(
             material,
             plane_base_params,
             mps["high_symmetry_points"]["K"],
@@ -99,6 +106,17 @@ def main():
             "KXz",
         )
 
+    
+    # end of main()
+    out = {}
+    if run_path_calc:
+        out["path"] = (sim_path, tb_path, arpes_path)
+    if run_xx_xz:
+        out["XxXz"] = (sim_xxz, tb_xxz, arpes_xxz)
+    if run_k_xz:
+        out["KXz"] = (sim_kxz, tb_kxz, arpes_kxz)
+    return out
+
 
 if __name__ == "__main__":
-    main()
+    results = main()

@@ -24,7 +24,7 @@ class Material:
         # Create a copy for simulation parameters
         self.simulation_parameters = {}
         # Convert parameters to atomic units and calculate Z_eff
-        self.convert_to_atomic_units_and_calculate_Z_eff()
+        self.convert_to_atomic_units()
         # Generate the real space lattice
         self.real_space_lattice = self.generate_lattice()
         # Calculate list of neighbours
@@ -32,7 +32,7 @@ class Material:
         # Calculate the reciprocal lattice vectors
         self.reciprocal_lattice_vecs = self.calc_reciprocal_lattice_vecs()
     
-    def convert_to_atomic_units_and_calculate_Z_eff(self):
+    def convert_to_atomic_units(self):
         '''Converts the parameters of the material_db.json file from eV, nm
         to atomic units. Also calculates the effective charge.
         
@@ -81,7 +81,7 @@ class Material:
 
         d_nn = torch.norm(basis[1] - basis[0])
         self.material_parameters_AU['d_nn'] = d_nn
-        self.material_parameters_AU['effective_nuclear_charge'] = 1 / (0.5 * d_nn)
+
 
     @staticmethod
     def load_parameters(name, db_path=_DEFAULT_DB_PATH):

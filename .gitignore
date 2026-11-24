@@ -3,4 +3,7 @@ __pycache__/
 .vscode/
 *.ipynb_checkpoints/
 *.png
-*.pdf
+*.pdf 
+.DS_Store
+*.zip
+figures/
