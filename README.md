@@ -9,7 +9,7 @@ The code was developed to support the interpretation of soft- and hard-X-ray ARP
 Given a material, a plane (or path) in three-dimensional crystal momentum space, a photon energy, and a light polarisation, the code produces:
 
 1. **A tight-binding band structure** — eigenvalues and eigenvectors of the sp3s\* Hamiltonian evaluated on the requested k-manifold. With spin–orbit coupling enabled the basis is doubled to 20 spin-orbitals; without it the basis has 10 orbitals per primitive cell (two atoms × {s, p_x, p_y, p_z, s\*}).
-2. **A photoemission matrix element** ⟨f | ε · p̂ | i ⟩ evaluated at every k-point in the manifold. The initial state is the tight-binding eigenstate; the final state is approximated as a plane wave at the photoelectron momentum q = k + G, with the sum over reciprocal lattice vectors G handled explicitly. Each tight-binding orbital contributes its analytic Fourier transform φ̃(q), evaluated at the full photoelectron momentum (not the reduced crystal momentum) — this is what produces the cross-zone intensity decay that is otherwise often misattributed to the inelastic mean free path.
+2. **A photoemission matrix element** ⟨f | ε · p̂ | i ⟩ evaluated at every k-point in the manifold. The initial state is the tight-binding eigenstate; the final state is approximated as a plane wave at the photoelectron momentum q = k + G, with the sum over reciprocal lattice vectors G handled explicitly. Each tight-binding orbital contributes its analytic Fourier transform φ̃(q), evaluated at the full photoelectron momentum (not the reduced crystal momentum) — — this is the origin of the cross-zone intensity decay in the model.
 3. **A 2D isosurface map** — the integrated intensity in a narrow energy window around a chosen binding energy, plotted across a user-defined plane in k-space. This is the simulation analogue of an ARPES constant-energy map.
 4. **A 1D band plot along a high-symmetry path** L–Γ–X–U–Γ for diagnostic comparison with literature band structures.
 
@@ -17,19 +17,34 @@ For delta-layer (2DEG) calculations the code additionally multiplies the matrix 
 
 ## Physics summary
 
-The matrix element is computed in the dipole approximation as
+The matrix element is computed in the dipole approximation with a plane-wave final state,
 
-  M(k, G) = ε · q · Σ_τ e^{−i q · τ} Σ_α c_α(k, n) φ̃_α(q),
+M(q) = (ε · q) Σ_α e^{−i G · τ_α} Σ_μ c_αμ(k, n) φ̃_αμ(q),   q = k + G,
 
-where q = k − G is the photoelectron momentum after Bragg umklapp by reciprocal lattice vector G, τ runs over the two-atom basis of the diamond / zinc-blende cell, α runs over the tight-binding orbitals on each sublattice, c_α(k, n) are the eigenvector components for band n, and φ̃_α(q) is the orbital Fourier transform. Three distinct intensity effects emerge naturally from this expression:
+where τ_α runs over the two atoms of the diamond / zinc-blende basis, μ over the orbitals on each
+atom, c_αμ(k, n) are the tight-binding eigenvector components of band n, and φ̃_αμ(q) is the
+analytic Fourier transform of orbital μ, evaluated at the full photoelectron momentum q. Three
+intensity effects follow from this expression:
 
-- **Inter-zone alternation** from the structure factor Σ_τ e^{−i q · τ} of the two-atom basis,
-- **Cross-zone decay** from the magnitude of the atomic form factor |φ̃(q)|, which falls off with |q|,
-- **Intra-zone modulations** from momentum-dependent orbital phases and from the orbital character of the eigenvectors c_α(k, n).
+- Inter-zone alternation from the two-atom structure factor Σ_α e^{−i G · τ_α}, weighted by the
+  band- and orbital-dependent sublattice amplitudes;
+- Cross-zone decay from the atomic form factor |φ̃(q)|, which falls off with |q|;
+- Intra-zone modulations from momentum-dependent orbital phases in c_αμ(k, n).
 
-For bulk crystals there is a strict δ(k_⊥ − G_⊥) selection rule in the surface-normal direction. For delta layers this rule is broadened into a Lorentzian (or finite-well) envelope, giving access to a continuous range of k_⊥ — which is the physical origin of the kz-dispersionless features characteristic of 2D electron systems.
+For delta layers, the out-of-plane crystal momentum is fixed at the conduction-band minimum ±k₀
+and the bulk k_⊥ selection rule is replaced by the Fourier transform of a finite-square-well
+envelope, F̃(q_⊥ ∓ k₀ − G_⊥). Reciprocal-lattice vectors G run over the full 3D (bcc) reciprocal
+lattice with G_∥ = q_∥ − k_∥.
 
-Hydrogenic orbital Fourier transforms are used for Si: the bonding s and p orbitals are taken as the n = 3 hydrogenic functions (3s, 3p_x, 3p_y, 3p_z) and the excited s\* orbital as 4s, all evaluated at an effective nuclear charge Z\_eff = 2 / d_NN set by the nearest-neighbour distance.
+Summation: intensities are summed incoherently over bands, photoelectron spin, in-plane
+reciprocal-lattice vectors (distinct initial states) and the ±k₀ valleys; contributions from
+different G_⊥ belonging to the same state are summed coherently. Energies are Gaussian-broadened.
+
+Atomic orbitals: hydrogenic 3s, 3p and 4s (for s*) radial functions with orbital-specific
+effective nuclear charges for Si: Z_3s = 4.90 and Z_3p = 4.29 (Clementi–Raimondi), Z_s* = 8.7.
+The sign of each form factor follows (−1)^(n−l−1), i.e. positive outer lobes, consistent with
+the Slater–Koster convention of Vogl et al. These Z values are specific to Si; other materials
+require their own values.
 
 ## Features
 
@@ -161,7 +176,8 @@ The materials database fields `e_sa`, `e_sc`, `e_pa`, `e_pc`, `e_ssa`, `e_ssc` a
 
 ## Citation
 
-If you use this code in published work, please cite the accompanying paper (in preparation):
+If you use this code, please cite the accompanying paper (reference to be added on publication)
+and the archived software release via its Zenodo DOI (see "Cite this repository" on GitHub).
 
 
 ## License
