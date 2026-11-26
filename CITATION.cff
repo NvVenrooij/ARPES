@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Tight-binding photoemission model for multi-zone ARPES of silicon δ-layers"
+version: "1.1"
+date-released: 2026-11-26
+authors:
+  - family-names: "van Venrooij"
+    given-names: "Niels R. S."
+    affiliation: "University of Iowa; London Centre for Nanotechnology, UCL"
+    orcid: "https://orcid.org/0009-0001-9652-978X"
+  - family-names: "Flatté"
+    given-names: "Michael E."
+    affiliation: "University of Iowa; Eindhoven University of Technology"
+repository-code: "https://github.com/NvanVenrooij/REPO-NAME"
+license: MIT
+keywords:
+  - ARPES
+  - tight-binding
+  - silicon
+  - delta-doping
+  - photoemission structure factor
